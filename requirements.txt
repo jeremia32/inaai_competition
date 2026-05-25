@@ -1,0 +1,42 @@
+# --- Core LangChain & LLM ---
+langchain
+langchain-community
+langchain-google-genai
+langchain-huggingface
+google-generativeai
+
+# --- Local Models (HuggingFace) ---
+transformers
+torch
+accelerate
+huggingface_hub
+sentence-transformers
+
+# --- Vector DB & Retrieval ---
+chromadb
+rank-bm25
+
+# --- Document Processing ---
+pypdf
+
+# --- PII Redaction (Sensor Data Pasien) ---
+presidio-analyzer
+presidio-anonymizer
+spacy
+
+# --- API & Backend ---
+fastapi
+uvicorn
+python-dotenv
+
+# --- Evaluation & Utilities ---
+ragas
+pandas
+numpy
+scikit-lear6E
+
+langchain-core
+pydantic
+pydantic-core
+sentencepiece
+wheel
