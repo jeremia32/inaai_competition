@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from difflib import SequenceMatcher
 from typing import Any, Dict, List, Optional
 
+from app.evaluation.cost import CostTracker
+from app.evaluation.judge import MedicalLLMJudge
 from app.guardrails.triage import MedicalTriageGuardrails
 from app.pii.redact import MedicalPIIRedactor
 from app.rag.retrieval import MedicalHybridRetriever
@@ -27,8 +29,14 @@ class EvaluationResult:
     safety_message: str
     mrr_at_5: Optional[float]
     factual_score: Optional[float]
+    faithfulness_score: Optional[float]
+    relevance_score: Optional[float]
+    estimated_cost_usd: Optional[float]
+    prompt_tokens: Optional[int]
+    response_tokens: Optional[int]
     redaction_rate: float
     latency_seconds: float
+    judge_comment: Optional[str] = None
     generated_answer: Optional[str] = None
     error: Optional[str] = None
 
@@ -43,6 +51,8 @@ class MedicalEvaluator:
         retriever: MedicalHybridRetriever,
         prompt_builder: MedicalPromptBuilder,
         llm: Optional[GeminiMedicalLLM] = None,
+        cost_tracker: Optional[CostTracker] = None,
+        judge: Optional[MedicalLLMJudge] = None,
         top_k: int = 5,
     ):
         self.redactor = redactor
@@ -50,6 +60,8 @@ class MedicalEvaluator:
         self.retriever = retriever
         self.prompt_builder = prompt_builder
         self.llm = llm
+        self.cost_tracker = cost_tracker or CostTracker()
+        self.judge = judge or MedicalLLMJudge(llm=llm)
         self.top_k = top_k
 
     @staticmethod
@@ -157,8 +169,14 @@ class MedicalEvaluator:
                 safety_message=safety_message,
                 mrr_at_5=None,
                 factual_score=None,
+                faithfulness_score=None,
+                relevance_score=None,
+                estimated_cost_usd=None,
+                prompt_tokens=None,
+                response_tokens=None,
                 redaction_rate=redaction_rate,
                 latency_seconds=latency,
+                judge_comment=None,
                 generated_answer=safety_message,
             )
 
@@ -182,15 +200,42 @@ class MedicalEvaluator:
                 context=safe_context,
             )
 
-            if self.llm is None:
-                generated_answer = None
-                factual_score = None
-            else:
+            generated_answer = None
+            factual_score = None
+            faithfulness_score = None
+            relevance_score = None
+            judge_comment = None
+            estimated_cost = None
+            prompt_token_count = None
+            response_token_count = None
+
+            if self.llm is not None:
                 generated_answer = self.llm.generate(final_prompt)
                 factual_score = self.compute_factual_score(
                     generated_answer,
                     example.reference_answer,
                 )
+
+            prompt_token_count = self.cost_tracker.count_tokens(
+                final_prompt
+            )
+            response_token_count = self.cost_tracker.estimate_response_tokens(
+                prompt_token_count
+            )
+            estimated_cost = self.cost_tracker.estimate_query_cost(
+                prompt_tokens=prompt_token_count,
+                response_tokens=response_token_count,
+            )
+
+            judge_result = self.judge.evaluate(
+                query=safe_query,
+                generated_answer=generated_answer or "",
+                reference_answer=example.reference_answer,
+                context=safe_context,
+            )
+            faithfulness_score = judge_result.get("faithfulness")
+            relevance_score = judge_result.get("relevance")
+            judge_comment = judge_result.get("comment")
 
             redaction_rate = self.compute_pii_redaction_rate(
                 example.query + "\n" + context
@@ -203,8 +248,14 @@ class MedicalEvaluator:
                 safety_message=safety_message,
                 mrr_at_5=mrr_value,
                 factual_score=factual_score,
+                faithfulness_score=faithfulness_score,
+                relevance_score=relevance_score,
+                estimated_cost_usd=estimated_cost,
+                prompt_tokens=prompt_token_count,
+                response_tokens=response_token_count,
                 redaction_rate=redaction_rate,
                 latency_seconds=latency,
+                judge_comment=judge_comment,
                 generated_answer=generated_answer,
             )
 
@@ -216,11 +267,75 @@ class MedicalEvaluator:
                 safety_message=safety_message,
                 mrr_at_5=None,
                 factual_score=None,
+                faithfulness_score=None,
+                relevance_score=None,
+                estimated_cost_usd=None,
+                prompt_tokens=None,
+                response_tokens=None,
                 redaction_rate=0.0,
                 latency_seconds=latency,
+                judge_comment=None,
                 generated_answer=None,
                 error=str(exc),
             )
+
+    def simulate_costs(
+        self,
+        examples: List[EvaluationExample],
+        target_queries: int = 1000,
+    ) -> Dict[str, Any]:
+        samples = examples or []
+        if not samples:
+            return {
+                "num_queries": 0,
+                "total_estimated_cost_usd": 0.0,
+                "average_cost_usd": 0.0,
+                "estimated_cost_1000_usd": 0.0,
+                "average_latency_seconds": None,
+            }
+
+        total_cost = 0.0
+        latencies = []
+        for index in range(target_queries):
+            example = samples[index % len(samples)]
+            safe_query = self.redactor.redact(example.query)
+            triage_result = self.guardrails.triage(safe_query)
+            if triage_result["risk_level"] != "LOW":
+                latencies.append(0.0)
+                continue
+
+            start = time.perf_counter()
+            results = self.retriever.hybrid_search(
+                query=safe_query,
+                k_dense=self.top_k,
+                k_sparse=self.top_k,
+            )
+            context = self.retriever.format_context(results)
+            safe_context = self.redactor.redact(context)
+            final_prompt = self.prompt_builder.build_prompt(
+                query=safe_query,
+                context=safe_context,
+            )
+            prompt_tokens = self.cost_tracker.count_tokens(final_prompt)
+            response_tokens = self.cost_tracker.estimate_response_tokens(
+                prompt_tokens
+            )
+            estimated_cost = self.cost_tracker.estimate_query_cost(
+                prompt_tokens=prompt_tokens,
+                response_tokens=response_tokens,
+            )
+            total_cost += estimated_cost
+            latencies.append(time.perf_counter() - start)
+
+        return {
+            "num_queries": target_queries,
+            "total_estimated_cost_usd": round(total_cost, 6),
+            "average_cost_usd": round(total_cost / target_queries, 8),
+            "estimated_cost_1000_usd": round(total_cost, 6),
+            "average_latency_seconds": (
+                statistics.mean(latencies) if latencies else None
+            ),
+        }
 
     def summarize_results(
         self,
@@ -233,10 +348,22 @@ class MedicalEvaluator:
         redaction_rates = [r.redaction_rate for r in results]
         latencies = [r.latency_seconds for r in results]
 
+        cost_values = [r.estimated_cost_usd for r in results if r.estimated_cost_usd is not None]
+        faithfulness_values = [r.faithfulness_score for r in results if r.faithfulness_score is not None]
+        relevance_values = [r.relevance_score for r in results if r.relevance_score is not None]
+
         return {
             "num_examples": len(results),
             "mrr_at_5": statistics.mean(mrr_scores) if mrr_scores else None,
             "factual_faithfulness": statistics.mean(factual_scores) if factual_scores else None,
+            "faithfulness_score": statistics.mean(faithfulness_values) if faithfulness_values else None,
+            "relevance_score": statistics.mean(relevance_values) if relevance_values else None,
+            "average_cost_usd": statistics.mean(cost_values) if cost_values else None,
+            "estimated_cost_1000_usd": (
+                statistics.mean(cost_values) * 1000.0
+                if cost_values
+                else None
+            ),
             "pii_redaction_rate": statistics.mean(redaction_rates),
             "average_latency_seconds": statistics.mean(latencies),
             "p95_latency_seconds": statistics.quantiles(latencies, n=20)[-1]

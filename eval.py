@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ from app.evaluation.framework import (
     EvaluationExample,
     MedicalEvaluator,
 )
+from app.evaluation.synthetic_data import SyntheticDialogueGenerator
 from app.guardrails.triage import MedicalTriageGuardrails
 from app.pii.redact import MedicalPIIRedactor
 from app.rag.chunking import MedicalTextChunker
@@ -29,7 +30,10 @@ EVAL_EMBEDDING_MODELS = os.getenv(
     "intfloat/multilingual-e5-small,paraphrase-multilingual-mpnet-base-v2",
 ).split(",")
 EVAL_DATASET_PATH = Path("./data/eval_dataset.json")
+SYNTHETIC_DATASET_PATH = Path("./data/synthetic_eval_dataset.json")
 TOP_K = 5
+SYNTHETIC_EXAMPLE_COUNT = 20
+SIMULATION_QUERY_COUNT = 1000
 
 
 def load_eval_dataset(path: Path) -> List[EvaluationExample]:
@@ -70,6 +74,29 @@ def load_eval_dataset(path: Path) -> List[EvaluationExample]:
             description=item.get("description"),
         )
         for item in raw_data
+    ]
+
+# sintetik dataaaaaaaaa jeremmm
+def load_synthetic_dataset(
+    path: Path,
+    llm: Optional[GeminiMedicalLLM] = None,
+    num_examples: int = SYNTHETIC_EXAMPLE_COUNT,
+) -> List[EvaluationExample]:
+    generator = SyntheticDialogueGenerator()
+    raw_examples = generator.load_or_generate(
+        path=path,
+        num_examples=num_examples,
+        llm=llm,
+    )
+
+    return [
+        EvaluationExample(
+            query=item["query"],
+            reference_answer=item["reference_answer"],
+            relevant_sources=item.get("relevant_sources", []),
+            description=item.get("description"),
+        )
+        for item in raw_examples
     ]
 
 
@@ -175,6 +202,32 @@ def main():
             print(f"{key}: {value}")
 
         print(f"\nResults saved to {output_path.resolve()}")
+
+        if hf_token:
+            synthetic_examples = load_synthetic_dataset(
+                SYNTHETIC_DATASET_PATH,
+                llm=GeminiMedicalLLM(),
+            )
+        else:
+            synthetic_examples = load_synthetic_dataset(
+                SYNTHETIC_DATASET_PATH,
+                llm=None,
+            )
+
+        simulation = evaluator.simulate_costs(
+            synthetic_examples,
+            target_queries=SIMULATION_QUERY_COUNT,
+        )
+
+        simulation_path = Path(f"eval_cost_simulation_{model_slug}.json")
+        with simulation_path.open("w", encoding="utf-8") as handle:
+            json.dump(simulation, handle, indent=2, ensure_ascii=False)
+
+        print("\n========== COST SIMULATION ==========")
+        for key, value in simulation.items():
+            print(f"{key}: {value}")
+
+        print(f"\nSimulation results saved to {simulation_path.resolve()}")
         print("========== MODEL RUN COMPLETE ==========")
 
 

@@ -1,0 +1,51 @@
+{
+  "model_name": "intfloat/multilingual-e5-small",
+  "summary": {
+    "num_examples": 2,
+    "mrr_at_5": 0.0,
+    "factual_faithfulness": 0.2689138408899049,
+    "faithfulness_score": 70,
+    "relevance_score": 85,
+    "average_cost_usd": 0.0032643,
+    "estimated_cost_1000_usd": 3.2643,
+    "pii_redaction_rate": 1.0,
+    "average_latency_seconds": 5.763694749970455,
+    "p95_latency_seconds": 9.847636045044055
+  },
+  "examples": [
+    {
+      "query": "Apa gejawa awal diabetes melitus pada anak?",
+      "blocked": false,
+      "safety_message": "✅ Query termasuk kategori aman.",
+      "mrr_at_5": 0.0,
+      "factual_score": 0.3405275779376499,
+      "faithfulness_score": 60,
+      "relevance_score": 80,
+      "estimated_cost_usd": 0.0038588,
+      "prompt_tokens": 1834,
+      "response_tokens": 458,
+      "redaction_rate": 1.0,
+      "latency_seconds": 4.251123899943195,
+      "judge_comment": "Jawaban tidak mencakup gejala awal diabetes melitus pada anak secara spesifik, tetapi menyebutkan usia awitan DM Tipe-2 pada anak dan remaja.",
+      "generated_answer": "Gejala awal diabetes melitus pada anak tidak ditemukan secara spesifik dalam dokumen yang disediakan. Namun, dapat disebutkan bahwa awitan DM Tipe-2 pada anak dan remaja paling sering ditemukan pada dekade kedua kehidupan dengan median usia 13,5 tahun dan jarang terjadi sebelum usia pubertas [4].",
+      "error": null
+    },
+    {
+      "query": "Saya memiliki riwayat penyakit karies gigi dan ingin tahu apakah boleh minum makanan mengandung gula.",
+      "blocked": false,
+      "safety_message": "✅ Query termasuk kategori aman.",
+      "mrr_at_5": 0.0,
+      "factual_score": 0.19730010384215993,
+      "faithfulness_score": 80,
+      "relevance_score": 90,
+      "estimated_cost_usd": 0.0026698,
+      "prompt_tokens": 1254,
+      "response_tokens": 313,
+      "redaction_rate": 1.0,
+      "latency_seconds": 7.276265599997714,
+      "judge_comment": "Jawaban mencakup inti pertanyaan dan beberapa informasi relevan, tetapi tidak secara spesifik menjawab pertanyaan dan melewatkan beberapa detail.",
+      "generated_answer": "Saya tidak menemukan informasi yang secara spesifik menjawab pertanyaan Anda tentang apakah boleh minum makanan mengandung gula dengan riwayat penyakit karies gigi. Namun, berdasarkan informasi yang ada, saya dapat menyimpulkan bahwa konsumsi makanan atau minuman dengan kandungan gula yang tinggi dapat meningkatkan risiko karies gigi [1].\n\nSelain itu, beberapa faktor lain seperti pola menyikat gigi yang tidak sesuai, riwayat sistemik, obat-obatan, dan self-administered medication (OTC) juga dapat meningkatkan risiko karies gigi [2].\n\nSaya sarankan Anda untuk berkonsultasi dengan dokter gigi atau ahli kesehatan gigi untuk mendapatkan saran yang lebih spesifik dan tepat untuk kebutuhan Anda.\n\nJika Anda memiliki gejala atau kondisi darurat, segera hubungi IGD atau dokter untuk mendapatkan bantuan medis yang tepat.",
+      "error": null
+    }
+  ]
+}

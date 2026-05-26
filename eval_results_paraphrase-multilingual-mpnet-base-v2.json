@@ -1,0 +1,51 @@
+{
+  "model_name": "paraphrase-multilingual-mpnet-base-v2",
+  "summary": {
+    "num_examples": 2,
+    "mrr_at_5": 0.0,
+    "factual_faithfulness": 0.39064608409348517,
+    "faithfulness_score": 30,
+    "relevance_score": 45,
+    "average_cost_usd": 0.0034833,
+    "estimated_cost_1000_usd": 3.4833,
+    "pii_redaction_rate": 1.0,
+    "average_latency_seconds": 5.727220350003336,
+    "p95_latency_seconds": 7.87612915491336
+  },
+  "examples": [
+    {
+      "query": "Apa gejawa awal diabetes melitus pada anak?",
+      "blocked": false,
+      "safety_message": "✅ Query termasuk kategori aman.",
+      "mrr_at_5": 0.0,
+      "factual_score": 0.5235602094240838,
+      "faithfulness_score": 0,
+      "relevance_score": 0,
+      "estimated_cost_usd": 0.0033652,
+      "prompt_tokens": 1593,
+      "response_tokens": 398,
+      "redaction_rate": 1.0,
+      "latency_seconds": 4.93132820003666,
+      "judge_comment": "Jawaban tidak mencakup informasi yang relevan dengan pertanyaan pasien.",
+      "generated_answer": "Gejala awal diabetes melitus pada anak tidak ditemukan dalam dokumen.",
+      "error": null
+    },
+    {
+      "query": "Saya memiliki riwayat penyakit karies gigi dan ingin tahu apakah boleh minum makanan mengandung gula.",
+      "blocked": false,
+      "safety_message": "✅ Query termasuk kategori aman.",
+      "mrr_at_5": 0.0,
+      "factual_score": 0.25773195876288657,
+      "faithfulness_score": 60,
+      "relevance_score": 90,
+      "estimated_cost_usd": 0.0036014,
+      "prompt_tokens": 1708,
+      "response_tokens": 427,
+      "redaction_rate": 1.0,
+      "latency_seconds": 6.523112499970011,
+      "judge_comment": "Jawaban tidak sepenuhnya sesuai dengan referensi medis, tetapi relevan dengan pertanyaan pasien.",
+      "generated_answer": "Tidak ditemukan dalam dokumen informasi yang menjelaskan apakah minum makanan mengandung gula boleh atau tidak bagi pasien dengan riwayat penyakit karies gigi. Namun, dapat disimpulkan bahwa konsumsi makanan atau minuman dengan kandungan gula yang tinggi memiliki risiko karies yang lebih tinggi [2]. Oleh karena itu, sebaiknya Anda menghindari konsumsi makanan atau minuman dengan kandungan gula yang tinggi untuk mencegah karies gigi.\n\nJika Anda memiliki gejala karies gigi atau gangguan kesehatan lainnya, sebaiknya Anda berkonsultasi dengan dokter atau ahli kesehatan gigi untuk mendapatkan saran dan perawatan yang tepat.",
+      "error": null
+    }
+  ]
+}

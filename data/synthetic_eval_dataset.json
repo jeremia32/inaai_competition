@@ -1,0 +1,110 @@
+[
+  {
+    "query": "Saya berusia 55 tahun dan sering merasa pusing, apakah ini tanda hipertensi?",
+    "reference_answer": "Hipertensi sering menyebabkan pusing. Periksa tekanan darah, perbaiki gaya hidup, dan konsultasikan dokter untuk pengelolaan tekanan darah.",
+    "relevant_sources": [{"file_name": "PNPK_Hipertensi_2025.pdf", "page": 2}],
+    "description": "Simulasi gejala awal hipertensi pada pasien dewasa."
+  },
+  {
+    "query": "Nama saya Siti, NIK 3216549870123456. Apakah obat flu aman untuk ibu hamil 7 bulan?",
+    "reference_answer": "Obat flu untuk ibu hamil harus dipilih dengan hati-hati. Sebaiknya berkonsultasi dengan dokter kandungan dan gunakan obat yang direkomendasikan untuk kehamilan.",
+    "relevant_sources": [{"file_name": "PNPK_Kehamilan_2024.pdf", "page": 4}],
+    "description": "Pertanyaan tentang keamanan obat flu pada kehamilan, termasuk PII."
+  },
+  {
+    "query": "Dada kiri saya terasa nyeri dan saya sesak napas. Haruskah saya segera ke UGD?",
+    "reference_answer": "Nyeri dada dan sesak napas dapat mengindikasikan kondisi darurat. Segera cari pertolongan medis di UGD atau layanan gawat darurat.",
+    "relevant_sources": [{"file_name": "PNPK_Kardiovaskular_2024.pdf", "page": 1}],
+    "description": "Gejala darurat kardiovaskular pada pasien."
+  },
+  {
+    "query": "Saya memiliki riwayat asma; apakah inhaler bronkodilator boleh digunakan setiap hari?",
+    "reference_answer": "Penggunaan inhaler bronkodilator harian harus mengikuti anjuran dokter dan dikombinasikan dengan rencana aksi asma untuk mengontrol gejala.",
+    "relevant_sources": [{"file_name": "PNPK_Asma_2024.pdf", "page": 3}],
+    "description": "Pertanyaan perawatan asma jangka panjang."
+  },
+  {
+    "query": "Berapa dosis paracetamol untuk anak 8 tahun dengan demam?",
+    "reference_answer": "Dosis paracetamol anak biasanya 10-15 mg/kg setiap 4-6 jam, dengan batas maksimal 5 dosis per hari dan konsultasi dokter jika gejala berlanjut.",
+    "relevant_sources": [{"file_name": "PNPK_Anak_2024.pdf", "page": 5}],
+    "description": "Pertanyaan dosis obat demam untuk anak."
+  },
+  {
+    "query": "Saya memiliki diabetes tipe 2 dan ingin tahu apakah gula darah tinggi memerlukan perubahan terapi?",
+    "reference_answer": "Diabetes tipe 2 dengan glukosa tinggi biasanya memerlukan evaluasi terapi, perubahan gaya hidup, dan konsultasi dokter untuk penyesuaian obat.",
+    "relevant_sources": [{"file_name": "PNPK_Diabetes_2025.pdf", "page": 7}],
+    "description": "Pertanyaan manajemen diabetes tipe 2."
+  },
+  {
+    "query": "Apakah pasien lansia boleh menggunakan NSAID untuk nyeri sendi?",
+    "reference_answer": "NSAID dapat meningkatkan risiko pada lansia. Pilihan analgesik harus ditentukan oleh dokter dan disesuaikan dengan kondisi ginjal serta pencernaan.",
+    "relevant_sources": [{"file_name": "PNPK_Analgesik_2023.pdf", "page": 9}],
+    "description": "Pertanyaan interaksi obat analgesik pada lansia."
+  },
+  {
+    "query": "Saya minum warfarin, bolehkah saya makan kangkung setiap hari?",
+    "reference_answer": "Penderita yang menggunakan warfarin harus mengontrol asupan makanan tinggi vitamin K seperti kangkung dan berkonsultasi dengan dokter untuk penyesuaian dosis.",
+    "relevant_sources": [{"file_name": "PNPK_Antikoagulan_2024.pdf", "page": 6}],
+    "description": "Pertanyaan interaksi makanan dan antikoagulan."
+  },
+  {
+    "query": "Saya hamil 24 minggu dan mengalami mual hebat. Bagaimana mengatasinya tanpa obat keras?",
+    "reference_answer": "Mual kehamilan dapat diatasi dengan makanan kecil sering, hidrasi, dan konsultasi dokter. Hindari obat keras tanpa anjuran medis.",
+    "relevant_sources": [{"file_name": "PNPK_Kehamilan_2024.pdf", "page": 8}],
+    "description": "Pertanyaan kehamilan dan pengelolaan mual."
+  },
+  {
+    "query": "Apakah pasien obesitas berisiko lebih tinggi terkena hipertensi?",
+    "reference_answer": "Obesitas merupakan faktor risiko hipertensi. Pencegahan meliputi diet sehat, olahraga, dan pemantauan tekanan darah.",
+    "relevant_sources": [{"file_name": "PNPK_Hipertensi_2025.pdf", "page": 3}],
+    "description": "Pertanyaan hubungan obesitas dan hipertensi."
+  },
+  {
+    "query": "Saya baru saja mendapat hasil pemeriksaan kolesterol tinggi, obat apa yang biasanya direkomendasikan?",
+    "reference_answer": "Pengobatan kolesterol tinggi umumnya mencakup statin, perubahan gaya hidup, dan tatalaksana medis sesuai profil risiko pasien.",
+    "relevant_sources": [{"file_name": "PNPK_Lipid_2024.pdf", "page": 2}],
+    "description": "Pertanyaan tatalaksana kolesterol tinggi."
+  },
+  {
+    "query": "Saya sering merasa lelah dan berat badan turun tanpa alasan. Apakah ini tanda diabetes?",
+    "reference_answer": "Gejala seperti lelah dan penurunan berat badan bisa terkait diabetes. Periksa gula darah dan konsultasikan dokter untuk diagnosis.",
+    "relevant_sources": [{"file_name": "PNPK_Diabetes_2025.pdf", "page": 1}],
+    "description": "Pertanyaan gejala awal diabetes."
+  },
+  {
+    "query": "Bagaimana cara menurunkan tekanan darah secara alami sebelum menambah obat?",
+    "reference_answer": "Penurunan tekanan darah alami mencakup diet rendah garam, olahraga teratur, dan manajemen stres, sambil tetap mengikuti rekomendasi medis.",
+    "relevant_sources": [{"file_name": "PNPK_Hipertensi_2025.pdf", "page": 4}],
+    "description": "Pertanyaan non-farmakologis untuk hipertensi."
+  },
+  {
+    "query": "Saya sedang menyusui dan terkena infeksi saluran kemih. Bisakah saya minum antibiotik yang diresepkan?",
+    "reference_answer": "Pasien menyusui sebaiknya menggunakan antibiotik yang aman untuk laktasi sesuai rekomendasi dokter.",
+    "relevant_sources": [{"file_name": "PNPK_Infeksi_2024.pdf", "page": 5}],
+    "description": "Pertanyaan penggunaan antibiotik saat menyusui."
+  },
+  {
+    "query": "Apakah obat tekanan darah harus diminum setiap hari, walaupun tidak merasa sakit?",
+    "reference_answer": "Obat tekanan darah biasanya harus diminum secara teratur sesuai resep meskipun pasien merasa baik, untuk menjaga stabilitas tekanan darah.",
+    "relevant_sources": [{"file_name": "PNPK_Hipertensi_2025.pdf", "page": 6}],
+    "description": "Pertanyaan kepatuhan terapi hipertensi."
+  },
+  {
+    "query": "Saya merasa perut mulas setelah makan pedas. Obat maag apa yang sebaiknya diminum?",
+    "reference_answer": "Obat maag seperti antasida atau inhibitor proton dapat membantu, namun konsultasikan dokter untuk diagnosis gastritis atau tukak lambung.",
+    "relevant_sources": [{"file_name": "PNPK_Gastroenterologi_2024.pdf", "page": 7}],
+    "description": "Pertanyaan pengobatan maag akibat makanan pedas."
+  },
+  {
+    "query": "Anak saya batuk terus dan demam dua hari. Kapan sebaiknya dibawa ke dokter?",
+    "reference_answer": "Jika demam dan batuk berlangsung lebih dari dua hari atau disertai kesulitan bernapas, segera konsultasikan ke dokter anak.",
+    "relevant_sources": [{"file_name": "PNPK_Anak_2024.pdf", "page": 4}],
+    "description": "Pertanyaan triase pernapasan anak."
+  },
+  {
+    "query": "Saya memiliki riwayat penyakit jantung dan ingin tahu apakah boleh minum suplemen vitamin K.",
+    "reference_answer": "Pasien penyakit jantung harus berhati-hati dengan suplemen vitamin K karena dapat berinteraksi dengan obat antikoagulan. Konsultasi dokter diperlukan.",
+    "relevant_sources": [{"file_name": "PNPK_Kardiovaskular_2024.pdf", "page": 5}],
+    "description": "Pertanyaan nutrisi dan interaksi obat jantung."
+  }
+]

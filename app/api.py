@@ -1,10 +1,12 @@
 import os
+import time
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from app.evaluation.cost import CostTracker
 from app.guardrails.triage import MedicalTriageGuardrails
 from app.pii.redact import MedicalPIIRedactor
 from app.rag.chunking import MedicalTextChunker
@@ -48,6 +50,7 @@ guardrails: Optional[MedicalTriageGuardrails] = None
 retriever: Optional[MedicalHybridRetriever] = None
 prompt_builder: Optional[MedicalPromptBuilder] = None
 llm: Optional[GeminiMedicalLLM] = None
+cost_tracker: Optional[CostTracker] = None
 
 
 class InferenceRequest(BaseModel):
@@ -73,6 +76,10 @@ class InferenceResponse(BaseModel):
     safety_message: str
     sources: List[SourceItem]
     answer: str
+    prompt_tokens: Optional[int] = None
+    response_tokens: Optional[int] = None
+    estimated_cost_usd: Optional[float] = None
+    latency_seconds: Optional[float] = None
 
 
 @app.on_event("startup")
@@ -83,6 +90,7 @@ def startup_event() -> None:
     global retriever
     global prompt_builder
     global llm
+    global cost_tracker
 
     loader = MedicalPDFLoader()
     documents = loader.load_folder(PDF_FOLDER)
@@ -119,6 +127,7 @@ def startup_event() -> None:
     )
     prompt_builder = MedicalPromptBuilder()
     llm = GeminiMedicalLLM()
+    cost_tracker = CostTracker()
 
     pipeline_ready = True
 
@@ -181,7 +190,21 @@ def infer(request: InferenceRequest) -> InferenceResponse:
         context=safe_context,
     )
 
+    start = time.perf_counter()
     answer = llm.generate(final_prompt)
+    latency_seconds = time.perf_counter() - start
+
+    if cost_tracker is None:
+        prompt_tokens = None
+        response_tokens = None
+        estimated_cost = None
+    else:
+        prompt_tokens = cost_tracker.count_tokens(final_prompt)
+        response_tokens = cost_tracker.estimate_response_tokens(prompt_tokens)
+        estimated_cost = cost_tracker.estimate_query_cost(
+            prompt_tokens=prompt_tokens,
+            response_tokens=response_tokens,
+        )
 
     return InferenceResponse(
         query=request.query,
@@ -190,6 +213,10 @@ def infer(request: InferenceRequest) -> InferenceResponse:
         safety_message=safety_message,
         sources=sources,
         answer=answer,
+        prompt_tokens=prompt_tokens,
+        response_tokens=response_tokens,
+        estimated_cost_usd=estimated_cost,
+        latency_seconds=round(latency_seconds, 4),
     )
 
 

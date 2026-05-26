@@ -1,0 +1,7 @@
+{
+  "num_queries": 1000,
+  "total_estimated_cost_usd": 2.98855,
+  "average_cost_usd": 0.00298855,
+  "estimated_cost_1000_usd": 2.98855,
+  "average_latency_seconds": 0.048219375501736064
+}

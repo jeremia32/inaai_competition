@@ -1,21 +1,21 @@
 [
   {
-    "query": "Apa terapi awal hipertensi?",
-    "reference_answer": "Terapi awal hipertensi meliputi modifikasi gaya hidup dan obat antihipertensi sesuai pedoman.",
+    "query": "Apa gejawa awal diabetes melitus pada anak?",
+    "reference_answer": "Gejala awal diabetes melitus pada anak meliputi peningkatan poliuria, polidipsia, dan penurunan berat badan yang signifikan.",
     "relevant_sources": [
       {
-        "file_name": "PNPK_Hipertensi_2025.pdf",
+        "file_name": "1737347004678dcfbc66f892.86462222.pdf",
         "page": 1
       }
     ],
     "description": "Contoh kueri medis dasar untuk evaluasi retrieval dan jawaban." 
   },
   {
-    "query": "Nama saya Budi Santoso, NIK 1234567890123456. Apa obat yang aman untuk asma?",
-    "reference_answer": "Pengobatan asma biasanya meliputi bronkodilator inhalasi sebagai terapi lini pertama, bersama dengan pengelolaan faktor pemicu.",
+    "query": "Saya memiliki riwayat penyakit karies gigi dan ingin tahu apakah boleh minum makanan mengandung gula.",
+    "reference_answer": "Penderita dengan riwayat karies gigi sebaiknya membatasi konsumsi makanan mengandung gula dan menjaga kebersihan mulut untuk mencegah kerusakan lebih lanjut.",
     "relevant_sources": [
       {
-        "file_name": "PNPK_Asthma_2024.pdf",
+        "file_name": "1737348723678dd6738d8127.20848648.pdf",
         "page": 5
       }
     ],
